@@ -13,8 +13,9 @@ export const addItem = () => {
 }
 
 
-export const deleteItem = () => {
+export const deleteItem = (id) => {
   return {
-    type: DELETE_ITEM
+    type: DELETE_ITEM,
+    payload: id
   }
 }

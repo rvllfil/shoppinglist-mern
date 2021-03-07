@@ -4,13 +4,16 @@ import {
   ListGroupItem,
   Button
 } from 'reactstrap'
-import { CSSTransition, TransitionGroup } from 'react-transition-group'
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
-import { getItems } from '../redux/items/itemsActions'
+import { getItems, deleteItem } from '../redux/items/itemsActions'
 import PropTypes from 'prop-types'
 
-const ShoppingList = ({item}) => {
+const ShoppingList = ({item, deleteItem}) => {
   const { items } = item
+  const onDeleteClick = (id) => {
+    deleteItem(id)
+  }
   return (
     <div>
       <Container>
@@ -22,20 +25,21 @@ const ShoppingList = ({item}) => {
 
         <ListGroup>
           <TransitionGroup className='shopping-list'>
-            {items.map(({id, name}) => (
-              <CSSTransition key={id} timeout={500} classNames='fade'>
-                <ListGroupItem>
-                  <Button
-                    className='remove-btn'
-                    color='danger'
-                    size='sm'
-                  >
-                    &times;
-                  </Button>
-                  {name}
-                </ListGroupItem>
-              </CSSTransition>
-            ))}
+          {items.map(({id, name}) => (
+            <CSSTransition key={id} classNames='fade' timeout={800}>
+              <ListGroupItem>
+                <Button
+                  className='remove-btn'
+                  color='danger'
+                  size='sm'
+                  onClick={() => onDeleteClick(id)}
+                >
+                  &times;
+                </Button>
+                {name}
+              </ListGroupItem>
+            </CSSTransition>
+          ))}
           </TransitionGroup>
         </ListGroup>
       </Container>
@@ -52,4 +56,7 @@ const mapStateToProps = (state) => ({
   item: state.items
 })
 
-export default connect(mapStateToProps, { getItems })(ShoppingList)
+export default connect(
+  mapStateToProps, 
+  { getItems, deleteItem }
+)(ShoppingList)
